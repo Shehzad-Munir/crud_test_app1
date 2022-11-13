@@ -1,0 +1,7 @@
+- Set up simple application using React
+- Build simple CRUD operation on the project. Please implement it using Agenda object
+- Build a functionality to export/import Agenda list in certain file format
+- Add validations for all of the possible cases
+- Use Git for the test project and add commits properly
+
+- Deadline: Please estimate when you can submit the test project result.
