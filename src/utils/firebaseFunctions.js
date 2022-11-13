@@ -1,6 +1,6 @@
 // saving items
 
-import { collection, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore"
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore"
 import { firestore } from "../firebase.config"
 
 export const saveItem = async (data)=>{
@@ -8,6 +8,11 @@ export const saveItem = async (data)=>{
 }
 export const saveUser = async (Uid,data)=>{
     await setDoc(doc(firestore,'userDetail', `${Uid}`), data, {merge: true})
+}
+
+export const deleteItems = async (id)=>{
+    await deleteDoc(doc(firestore,'foodItems', `${id}`))
+    
 }
 
 // GET DATA

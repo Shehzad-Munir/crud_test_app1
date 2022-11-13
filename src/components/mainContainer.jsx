@@ -13,6 +13,7 @@ const MainContainer = () => {
   useEffect(()=>{
 
   },[scrollValue,cartShow])
+  useEffect(()=>{},[foodItems])
 
   return (
     <div className="w-full h-auto flex flex-col items-center justify-center">
