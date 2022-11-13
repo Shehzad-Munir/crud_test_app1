@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MdFastfood,MdCloudUpload, MdDelete, MdFoodBank, MdAttachMoney } from 'react-icons/md'
 import { categories } from '../utils/data';
 import Loader from './Loader';
 import {deleteObject, getDownloadURL, ref, uploadBytesResumable} from 'firebase/storage'
 import { storage } from '../firebase.config';
-import { getAllFoodItems, saveItem } from '../utils/firebaseFunctions';
+import { getAllFoodItems, getFoodItem, saveItem, updateItem } from '../utils/firebaseFunctions';
 import { useStateValue } from '../context/StateProvider';
 import { actionType } from '../context/reducer';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 
 const CreateContainer = () => {
+
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [calories, setCalories] = useState("");
@@ -20,7 +22,23 @@ const CreateContainer = () => {
   const [alertStatus, setAlertStatus] = useState("danger")
   const[msg, setMsg] = useState(null)
   const[isLoading, setIsLoading] = useState(false)
-  const[imageAssets, setImageAssets] = useState(false)
+  const[imageAssets, setImageAssets] = useState(false) 
+
+  let location = useLocation();
+  let item_id = location.search.replace("?","")
+  const [idData, setIdData] = useState({})
+  console.log(item_id)
+  useEffect(() => {
+    if(item_id != '')
+    {
+      console.log(getFoodItem(item_id))
+      const data =  getFoodItem(item_id).then((response) => response).then((it) => {
+        setIdData(it)
+    });}
+    
+  }, [item_id])
+
+
 
   const uploadImage=(e)=>
   {
@@ -89,26 +107,26 @@ const CreateContainer = () => {
     setIsLoading(true)
     try 
     {
-      if(!title || !calories || !imageAssets || !price || !category)
-      {
-        setFields(true)
-        setMsg("Required Field must be filled")
-        setAlertStatus('danger')
-        setTimeout(()=>{
-          setFields(false)
-          setIsLoading(false)
-        },4000)
-      }else{
+
         const data ={
-          id: `${Date.now()}`,
-          title: title,
-          imageUrl: imageAssets,
-          category: category,
-          calories: calories,
+          id: `${item_id == ''? Date.now(): item_id}`,
+          title: title == '' && item_id != '' ? idData.title : title,
+          imageUrl: imageAssets == '' && item_id != '' ? idData.imageUrl : imageAssets,
+          category: category == '' && item_id != '' ? idData.category : category,
+          calories: calories == '' && item_id != '' ? idData.calories : calories,
           qty: 1,
-          price: price
+          price: price == '' && item_id != '' ? idData.price : price
         }
-        saveItem(data)
+        if(item_id != '')
+        {
+          updateItem(item_id,data)
+          console.log('updated')
+
+        }
+        else
+        {
+          saveItem(data)
+        }
         setIsLoading(false)
         setFields(true)
         setMsg('Data Uploaded successfully')
@@ -120,7 +138,7 @@ const CreateContainer = () => {
           
         },4000)
         fetchData()
-      }
+      
       
     } catch (error) {
       console.log(error)

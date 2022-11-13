@@ -12,7 +12,7 @@ const RowContainer = ({ flag, data, scrollValue }) => {
 
   const [items, setItems] = useState([]);
 
-  const [{foodItems, cartItems }, dispatch] = useStateValue();
+  const [{foodItems, cartItems,user }, dispatch] = useStateValue();
 
   const addtocart = () => {
     dispatch({
@@ -87,22 +87,28 @@ const RowContainer = ({ flag, data, scrollValue }) => {
                   className="w-full h-full object-contain"
                 />
               </motion.div>
-              <motion.div
-                whileTap={{ scale: 0.75 }}
-                className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center cursor-pointer hover:shadow-md -mt-8"
-                onClick={() => setItems([...cartItems, item])}
-              >
-                <Link to={'/createItem'} params={{myObj: item}}>
-                  <MdEdit className="text-white" />
-                </Link>
-              </motion.div>
-              <motion.div
-                whileTap={{ scale: 0.75 }}
-                className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center cursor-pointer hover:shadow-md -mt-8"
-                onClick={() => deleteItem(item.id)}
-              >
-                <MdDelete className="text-white" />
-              </motion.div>
+              {user && (
+                <>
+                <motion.div
+                    whileTap={{ scale: 0.75 }}
+                    className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center cursor-pointer hover:shadow-md -mt-8"
+                  >
+                    <Link to={{pathname:`/createItem`,state: item.id ,search:item.id}} >
+                      <MdEdit className="text-white" />
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    whileTap={{ scale: 0.75 }}
+                    className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center cursor-pointer hover:shadow-md -mt-8"
+                    onClick={() => deleteItem(item.id)}
+                  >
+                    <MdDelete className="text-white" />
+                  </motion.div>
+              </>
+
+              )}
+              
+              
               <motion.div
                 whileTap={{ scale: 0.75 }}
                 className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center cursor-pointer hover:shadow-md -mt-8"
