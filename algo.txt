@@ -1,0 +1,3 @@
+-open the app in browser
+- you can see the home page  after clicking user icon you can directly login from your gmail account
+- then you can access the  add  update delete  functionality.
